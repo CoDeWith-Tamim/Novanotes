@@ -1,42 +1,294 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>DevNotes</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>DevNotes</title>
+<meta name="description" content="Professional developer notes app"/>
+<meta name="theme-color" content="#0b0d12"/>
+<link rel="manifest" href="manifest.json"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link
+  id="hl-theme"
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<link rel="stylesheet" href="style.css">
 </head>
-
 <body>
+<div class="app">
 
-<div class="container">
-
+  <!-- SIDEBAR -->
   <aside class="sidebar">
-    <h2>DevNotes</h2>
+    <div class="sidebar-top">
+      <div class="brand">
+        <div class="brand-icon" style="font-size: 16px; display: flex; align-items: center; justify-content: center;">
+          ✨
+        </div>
+        <span class="brand-name">NovaNotes</span>
+      </div>
+      <div class="sidebar-top-actions">
+        <button id="install-btn" class="install-btn hidden" title="Install App">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        </button>
+        <button id="new-note-btn" class="new-btn">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+          New
+        </button>
+      </div>
+    </div>
 
-    <button>+ New Note</button>
+    <div class="sidebar-search">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input id="search-input" type="text" placeholder="Search notes…">
+    </div>
 
-    <ul>
-      <li>First Note</li>
-    </ul>
+    <div class="tag-filter-wrap">
+      <div id="tag-filter-list"></div>
+    </div>
+
+    <div class="notes-list-label">NOTES <span id="note-count-badge">0</span></div>
+
+    <div id="notes-container">
+      <div id="empty-message">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <p>No notes yet</p>
+        <span>Click "New" to start</span>
+      </div>
+    </div>
   </aside>
 
-  <main class="main-content">
+  <!-- MAIN -->
+  <main class="main">
 
-    <input type="text" placeholder="Note title">
+    <!-- WELCOME -->
+    <div id="welcome-screen" class="welcome-screen">
+      <div class="welcome-inner">
+        <div class="welcome-icon">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        </div>
+        <h1>DevNotes</h1>
+        <p>Your personal developer notebook.<br>Select a note or create a new one.</p>
+        <button class="welcome-cta" id="welcome-new-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+          Create first note
+        </button>
+      </div>
+    </div>
 
-    <br><br>
+    <!-- EDITOR -->
+    <div id="editor-panel" class="editor-panel hidden">
 
-    <textarea placeholder="Write your note here..."></textarea>
+      <!-- TOPBAR -->
+      <div class="editor-topbar">
+        <div class="topbar-left">
+          <button id="back-btn" class="back-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+          </button>
 
-    <br><br>
+          <div class="color-picker-wrap">
+            <button class="color-dot-btn" id="color-dot" title="Note color"></button>
+            <div class="color-dropdown hidden" id="color-dropdown">
+              <button class="cdot" data-color="" style="background:var(--bg5)" title="Default"></button>
+              <button class="cdot" data-color="blue" style="background:#3b6fd4" title="Blue"></button>
+              <button class="cdot" data-color="green" style="background:#2d8a5e" title="Green"></button>
+              <button class="cdot" data-color="amber" style="background:#b07d2a" title="Amber"></button>
+              <button class="cdot" data-color="red" style="background:#a03535" title="Red"></button>
+              <button class="cdot" data-color="purple" style="background:#6b3fa0" title="Purple"></button>
+            </div>
+          </div>
 
-    <button>Save Note</button>
+          <select id="note-tag" class="tag-select">
+            <option value="">No Tag</option>
+            <option value="HTML">HTML</option>
+            <option value="CSS">CSS</option>
+            <option value="JavaScript">JavaScript</option>
+            <option value="React">React</option>
+            <option value="Python">Python</option>
+            <option value="Git">Git</option>
+            <option value="SQL">SQL</option>
+            <option value="Other">Other</option>
+          </select>
 
+          <span id="editor-status" class="editor-status">Unsaved</span>
+        </div>
+
+        <div class="topbar-right">
+          <button id="split-btn" class="topbar-icon-btn active" title="Split view">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="18" rx="1"/></svg>
+          </button>
+          <div class="more-menu-wrap">
+            <button id="more-btn" class="topbar-icon-btn" title="More options">
+              <svg width="4" height="16" viewBox="0 0 4 16" fill="currentColor"><circle cx="2" cy="2" r="1.5"/><circle cx="2" cy="8" r="1.5"/><circle cx="2" cy="14" r="1.5"/></svg>
+            </button>
+            <div class="more-dropdown hidden" id="more-dropdown">
+              <button class="more-item danger" id="delete-btn">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+                Delete
+              </button>
+              <button class="more-item" id="pin-btn">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                Pin note
+              </button>
+              <button class="more-item" id="export-btn">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Export
+              </button>
+              <button class="more-item" id="print-btn">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                Print
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TITLE -->
+      <input id="note-title" type="text" placeholder="Note title…" class="title-input" autocomplete="off">
+
+      <!-- SPLIT PANE -->
+      <div class="split-container" id="split-container">
+        <!-- WRITE -->
+        <div class="write-pane" id="write-pane">
+          <div class="pane-label">
+            <span>EDITOR</span>
+            <div class="attach-inline">
+              <label for="file-upload" class="attach-btn">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+                Attach
+              </label>
+              <input type="file" id="file-upload">
+              <span id="file-name"></span>
+            </div>
+          </div>
+          <textarea id="note-content" placeholder="Start writing…&#10;&#10;Markdown supported:&#10;## Heading  |  **bold**  |  `code`&#10;&#10;```js&#10;const x = 'hello';&#10;```&#10;&#10;- [ ] Checkbox&#10;| Table | Here |"></textarea>
+        </div>
+
+        <!-- DIVIDER -->
+        <div class="pane-divider" id="pane-divider"></div>
+
+        <!-- PREVIEW -->
+        <div class="preview-pane" id="preview-pane">
+          <div class="pane-label">PREVIEW</div>
+          <div id="preview-content" class="markdown-body"></div>
+        </div>
+      </div>
+
+      <!-- FOOTER -->
+      <div class="editor-footer">
+        <span id="word-count">0 words</span>
+        <span class="fdot">·</span>
+        <span id="char-count">0 chars</span>
+        <span class="fdot">·</span>
+        <span id="read-time">0 min read</span>
+        <span class="fdot">·</span>
+        <span id="last-saved">Never saved</span>
+      </div>
+    </div>
   </main>
-
 </div>
 
+<!-- Export Modal -->
+<div id="export-modal" class="modal-overlay hidden">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span>Export Note</span>
+      <button onclick="closeModal('export-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <button class="export-opt" onclick="exportAs('md')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Export as Markdown (.md)
+      </button>
+      <button class="export-opt" onclick="exportAs('txt')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Export as Plain Text (.txt)
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirm Modal -->
+<div id="delete-modal" class="modal-overlay hidden">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span>Delete Note?</span>
+      <button onclick="closeModal('delete-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="color:var(--text2);font-size:13px;margin-bottom:14px">This cannot be undone.</p>
+      <div style="display:flex;gap:8px">
+        <button class="export-opt" style="flex:1;justify-content:center" onclick="closeModal('delete-modal')">Cancel</button>
+        <button class="export-opt danger-opt" style="flex:1;justify-content:center" onclick="confirmDelete()">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="ai-chat-panel" class="ai-panel">
+  <div class="ai-header">
+    <div class="ai-header-left">
+      <span class="ai-nova-logo">✦</span>
+      <div class="ai-title">NovaAI</div>
+    </div>
+    <div class="ai-header-right">
+      <button id="close-ai-btn" class="ai-close-btn">&times;</button>
+    </div>
+  </div>
+
+  <!-- AI Variant Selector -->
+  <div class="ai-variant-bar">
+    <button class="ai-variant-btn active" data-variant="general">
+      ⚡ General
+    </button>
+    <button class="ai-variant-btn" data-variant="thinking">
+      🧠 Thinking
+    </button>
+    <button class="ai-variant-btn" data-variant="deep">
+      🔬 Deep Think
+    </button>
+  </div>
+
+  <div id="ai-messages" class="ai-messages-container">
+    <div class="ai-msg assistant">
+      <span class="nova-badge">✦ NovaAI</span>
+      Hello! I`am NovaAI. I can do any analysis with your notes,finding anything,fix errors,sammarize and help with any reason!
+    </div>
+  </div>
+
+  <div class="ai-input-area">
+    <div class="ai-action-wrapper" style="position: relative;">
+        <button id="ai-plus-btn" class="ai-plus-btn" title="Add Features" type="button">+</button>
+        
+        <div id="ai-action-menu" class="ai-action-menu hidden">
+            <button type="button" class="menu-item" id="menu-upload">📎 Upload File</button>
+            <button type="button" class="menu-item" id="menu-analyze">🧠 Analyze Code</button>
+            <button type="button" class="menu-item" id="menu-pdf">📄 Summarize PDF</button>
+            <button type="button" class="menu-item" id="menu-search">🔍 Search Notes</button>
+            <button type="button" class="menu-item" id="menu-github">🐙 GitHub Agent</button>
+            <button type="button" class="menu-item" id="menu-debug">⚙️ Debug Mode</button>
+        </div>
+
+        <input type="file" id="ai-file-upload" style="display: none;" accept=".js,.py,.json,.txt,.log,.html,.css,.pdf" />
+    </div>
+
+    <textarea id="ai-user-input" placeholder="Ask NovaAI..." rows="1"></textarea>
+    
+    <button id="send-ai-btn" class="ai-send-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    </button>
+</div>
+</div>
+
+<button id="toggle-ai-float" class="ai-float-trigger">
+  <span class="float-icon">✦</span>
+  <span class="float-text">Ask NovaAI</span>
+</button>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.8/purify.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="app.js"></script>
 
 </body>

@@ -1,0 +1,27 @@
+# Environment variables (API keys)
+.env
+backend/.env
+*.env
+!.env.example
+
+# Dependencies
+node_modules/
+backend/node_modules/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Build/cache
+dist/
+build/
+.cache/
+*.backup
