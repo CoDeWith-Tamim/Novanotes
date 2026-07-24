@@ -14,7 +14,7 @@ app.use("/api/ai", require("./routes/ai"));
 app.get("/health", (req, res) => {
   res.json({
     status: "✅ DevNotes Backend Running",
-    gemini: process.env.GEMINI_API_KEY
+    groq: process.env.GROQ_API_KEY
       ? "🔑 API Key Loaded"
       : "❌ API Key Missing"
   });
