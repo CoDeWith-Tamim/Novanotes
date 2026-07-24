@@ -2,7 +2,10 @@
 🔗 **[Live Demo](https://codewith-tamim.github.io/Novanotes/client/)**
 An AI-powered note-taking app with a built-in AI assistant (**NovaAI**) that can search your notes, analyze files, summarize PDFs, and answer questions in multiple thinking modes.
 
-> Screenshot coming soon — will be added here once available.
+<img width="1080" height="2107" alt="download" src="https://github.com/user-attachments/assets/435dad0b-c849-4fca-a88e-4563bbb49b8c" />
+<img width="921" height="1708" alt="download" src="https://github.com/user-attachments/assets/0f1ed33d-d455-4edb-b0d9-86e4107e0355" />
+<img width="921" height="1708" alt="download" src="https://github.com/user-attachments/assets/17cb4933-a89e-47d4-80a2-77035460f452" />
+
 
 ---
 
