@@ -864,10 +864,7 @@ function applyTheme(theme) {
 // ═══════════════════════════════════════
 
 // ডাইনামিক ইউআরএল সেটিং (লোকাল ও ভিপিএস ডেপ্লয়মেন্ট ফ্রেন্ডলি)
-const BACKEND_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-  ? "http://localhost:5000/api/ai"
-  : "/api/ai";
-
+const BACKEND_URL = "https://novanotes-j6ku.onrender.com/api/ai";
 // ডাবল রিকোয়েস্ট প্রোটেকশন লক (Race Condition Guard)
 let isDevAIBusy = false;
 
